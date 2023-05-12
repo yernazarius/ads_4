@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -69,8 +70,8 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST<K, V>.Node>
             node.left= privateDelete(node.left, key);
         } else {
             if(node.left==null&node.right==null)  return null;
-            else if (node.left == null)  node= node.right;
-            else if (node.right == null) node= node.left;
+            else if (node.left == null)  node = node.right;
+            else if (node.right == null) node = node.left;
             else {
                 Node t = max(node.left);
                 node.key = t.key;
@@ -104,33 +105,16 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST<K, V>.Node>
 
     @Override
     public Iterator<Node> iterator() {
-        return new InOrder();
+        ArrayList<Node> list = new ArrayList<>();
+        inOrder(root, list);
+        return list.iterator();
     }
-    public  class InOrder implements Iterator<Node> {
-        Stack<Node> stack = new Stack<>();
-        public InOrder(){
-            pushLeft(root);
-        }
-        private void pushLeft(Node n){
-            while(n!=null){
-                stack.push(n);
-                n = n.left;
-            }
-        }
-        @Override
-        public boolean hasNext() {
-            return !stack.isEmpty();
-        }
-        @Override
-        public Node next() {
-            if(hasNext()){
-                Node current = stack.peek();
-                stack.pop();
-                pushLeft(current.right);
 
-                return current;
-            }
-            else return null;
+    private void inOrder(Node node, ArrayList<Node> list) {
+        if (node != null) {
+            inOrder(node.left, list);
+            list.add(node);
+            inOrder(node.right, list);
         }
     }
 }
